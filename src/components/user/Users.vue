@@ -98,6 +98,7 @@
                 <el-button type="primary" @click="editUserinfo">确 定</el-button>
             </span>
         </el-dialog>
+        
         <!-- 分配角色的对话框 -->
         <el-dialog title="分配角色" 
         :visible.sync="setDialogVisible" 
@@ -115,7 +116,6 @@
                     </el-select>
                 </p>
             </div>
-
             <span slot="footer" class="dialog-footer">
                 <el-button @click="setDialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveRoleinfo">确 定</el-button>

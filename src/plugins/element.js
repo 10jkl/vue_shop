@@ -77,7 +77,8 @@ import {
     Loading,
     MessageBox,
     Message,
-    Notification
+    Notification,
+   
   } from 'element-ui';
   
   Vue.use(Pagination);
