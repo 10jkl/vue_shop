@@ -308,7 +308,7 @@ export default {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).catch(err => err)//捕获用户点击取消按钮的结果返回值
+            }).catch(err => err)//如果用户点击取消按钮catch捕获错误，并将错误return出去
 
             // 用户确认删除,返回值为字符串confirm
             // 用户取消删除,返回值为字符串cancel

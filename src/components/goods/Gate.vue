@@ -54,14 +54,13 @@
                     <!-- options用来指定数据源 -->
                     <!-- props用来指定配置对象 -->
                     <el-cascader 
+                    expand-trigger="hover"
                     :options="parentCateList" 
-                    :props="{ 
-                    expandTrigger: 'hover', 
-                    checkStrictly: true,
-                    cascaderProps}" 
+                    :props="cascaderProps" 
                     v-model="selectedKeys" 
                     @change="parentCateChange" clearable>
                     </el-cascader>
+                  
                 </el-form-item>
             </el-form>
             <!-- 添加分类对话框底部区 -->
@@ -138,13 +137,13 @@ export default {
             //父级分类的列表
             parentCateList: [],
             //指定级联选择器的配置对象
-            cascaderProps: [{
-                value: 'cat_name',
-                label: 'cat_id',
+            cascaderProps:{
+                value: 'cat_id',
+                label: 'cat_name',
                 children: 'children'
-            }],
+            },
             //选中的父级分类的id数组
-            selectedKeys: [],
+            selectedKeys:[],
         }
     },
     created() {
@@ -181,12 +180,13 @@ export default {
         },
         //获取父级分类的数据列表
         async getParentCateList() {
-            const { data: res } = await this.$http.get('categories')
+            const { data: res } = await this.$http.get('categories', { params: {type:2} })
             if (res.meta.status !== 200)
                 return this.$message.error('获取父级分类列表失败')
-
-            console.log(res.data)
-            this.parentCateList = res.data
+       
+                this.parentCateList = res.data
+            console.log(this.parentCateList)
+            
         },
         //父级分类框选择项发生变化触发这个函数
         parentCateChange() {
