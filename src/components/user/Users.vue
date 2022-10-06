@@ -12,6 +12,7 @@
             <el-row :gutter="20">
                 <el-col :span="12">
                     <el-input placeholder="请输入内容" v-model="queryInfo.query" @clear="getUserList" clearable>
+                        <!-- slot="append"显示搜索按钮 -->
                         <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
                     </el-input>
                 </el-col>
@@ -150,6 +151,7 @@ export default {
         return {
             //获取用户列表的参数对象
             queryInfo: {
+                //
                 query: '',
                 // 当前的页数
                 pagenum: 1,
@@ -217,6 +219,7 @@ export default {
     },
 
     methods: {
+        //获取所有用户列表数据
         async getUserList() {
             const { data: res } = await this.$http.get('users', { params: this.queryInfo })
             if (res.meta.status !== 200)
