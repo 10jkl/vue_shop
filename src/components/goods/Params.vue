@@ -341,16 +341,6 @@ export default {
             row.inputVisible=false
             //需要发起请求,保存这次操作
             this.saveAttrvals(row)
-            // const { data: res } = await this.$http.put(
-            //         `categories/${this.cataId}/attributes/${row.attr_id}`, {
-            //         attr_name: row.attr_name,
-            //         attr_sel: row.attr_sel,
-            //         attr_vals: row.attr_vals.join(',')
-            //     })
-            //     if (res.meta.status !== 200) {
-            //         return this.$message.error('添加编辑参数失败')
-            //     }
-            //      this.$message.success('添加编辑参数成功')
 
         },
         //点击按钮展示展开行文本框,隐藏+ New Tag按钮

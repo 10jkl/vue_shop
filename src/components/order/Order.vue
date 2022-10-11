@@ -11,13 +11,17 @@
             <!-- 查找订单按钮区 -->
             <el-row :gutter="20">
                 <el-col :span="12">
-                    <el-input placeholder="请输入你要查找的订单内容" clearable>
-                        <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-input placeholder="请输入你要查找的订单内容" 
+                    v-model="querinfo.query" 
+                    @clear="getOrderList" clearable>
+                        <el-button slot="append" 
+                        icon="el-icon-search" 
+                        @click="getOrderList"></el-button>
                     </el-input>
                 </el-col>
             </el-row>
             <el-table :data="orderlist" border stripe>
-                <el-table-column type="index"></el-table-column>
+                <el-table-column label="#" type="index"></el-table-column>
                 <el-table-column label="订单编号" prop="order_number"></el-table-column>
                 <el-table-column label="订单价格" prop="order_price"></el-table-column>
                 <el-table-column label="是否付款" prop="pay_status">
@@ -100,7 +104,8 @@ export default {
                 //当前页码值
                 pagenum: 1,
                 //	每页显示多少条数据	
-                pagesize: 5
+                pagesize: 5,
+               
             },
             //订单数据列表数组
             orderlist: [],

@@ -31,8 +31,10 @@
                 </template>
                 <!-- 操作区  作用域插槽 -->
                 <template slot="opt" slot-scope="scope">
-                    <el-button type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
-                    <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
+                    <el-button type="primary" icon="el-icon-edit" size="mini"
+                    @click="showEditDiglog(scope.row.cat_id)">编辑</el-button>
+                    <el-button type="danger" icon="el-icon-delete" size="mini"
+                    @click="removeUserById(scope.row.cat_id)" >删除</el-button>
                 </template>
             </tree-table>
 
@@ -70,6 +72,22 @@
             </span>
         </el-dialog>
 
+         <!-- 修改分类的对话框 -->
+         <el-dialog title="修改分类" :visible.sync="editDialogVisible" width="50%" @close="editDialogclosed">
+            <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="100px">
+                <el-form-item label="分类 ID">
+                    <el-input v-model="editForm.cat_id" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="分类名称" prop="cat_name" >
+                    <el-input v-model="editForm.cat_name"></el-input>
+                </el-form-item>
+                
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="editUserinfo">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -144,6 +162,16 @@ export default {
             },
             //选中的父级分类的id数组
             selectedKeys:[],
+              //控制修改分类对话框的显示与隐藏
+              editDialogVisible: false,
+            //查询到的分类信息对象
+            editForm: {},
+            // 修改分类表单的验证规则对象
+            editFormRules: {
+                cat_name: [
+                    { required: true, message: '分类名称为必填项', trigger: 'blur' },
+                ],
+            },
         }
     },
     created() {
@@ -210,7 +238,7 @@ export default {
             this.$refs.addcateFormRef.validate(async v => {
                 //校验不通过
                 if (!v) return
-                //可以发起添加用户的网络请求
+                //可以发起添加分类的网络请求
                 const { data: res } = await this.$http.post('categories', this.addcateForm)
                 if (res.meta.status !== 201) {
                     this.$message.error('添加分类失败')
@@ -227,6 +255,66 @@ export default {
             this.selectedKeys = []
             this.addcateForm.cat_pid = 0
             this.addcateForm.cat_level = 0
+        },
+         //根据ID删除对应分类信息
+         async removeUserById(id) {
+            //弹框提示是否删除数据
+            const confirmResult = await this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).catch(err => err)//如果用户点击取消按钮catch捕获错误，并将错误return出去
+
+            // 用户确认删除,返回值为字符串confirm
+            // 用户取消删除,返回值为字符串cancel
+            if (confirmResult !== 'confirm') {
+                return this.$message.info('已取消删除')
+            }
+            const { data: res } = await this.$http.delete('categories/' + id)
+            if (res.meta.status !== 200) {
+                return this.$message.error('删除分类失败')
+            }
+
+            this.$message.success('删除分类成功')
+
+            //删除分类成功后重新获取分类列表数据(刷新列表)
+            this.getCateList()
+        },
+
+           //展示编辑分类对话框并查询分类信息
+           async showEditDiglog(id) {
+            const { data: res } = await this.$http.get('categories/' + id)
+            if (res.meta.status !== 200) {
+                return this.$message.error('查询分类信息失败')
+            }
+            this.editForm = res.data
+            console.log(this.editForm)
+
+            this.editDialogVisible = true
+        },
+        //监听修改分类对话框的关闭事件
+        editDialogclosed() {
+            this.$refs.editFormRef.resetFields()
+        },
+        //修改分类信息并提交
+        editUserinfo() {
+            this.$refs.editFormRef.validate(async v => {
+                //校验不通过
+                if (!v) return
+                //可以发起修改分类的网络请求
+                const { data: res } = await this.$http.put(
+                    'categories/' + this.editForm.cat_id, {
+                    cat_name: this.editForm.cat_name,
+                })
+                if (res.meta.status !== 200) {
+                    this.$message.error('修改分类失败')
+                }
+                this.$message.success('修改分类成功')
+                //修改成功后隐藏修改分类对话框
+                this.editDialogVisible = false
+                //修改成功后重新获取分类列表数据(刷新列表)
+                this.getCateList()
+            })
         },
 
     },

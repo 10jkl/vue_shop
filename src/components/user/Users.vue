@@ -38,7 +38,8 @@
                     <template slot-scope="scope">
                         <!-- {{scope.row}} -->
                         <!-- 修改按钮 -->
-                        <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDiglog(scope.row.id)">
+                        <el-button type="primary" icon="el-icon-edit" 
+                        size="mini" @click="showEditDiglog(scope.row.id)">
                         </el-button>
                         <!-- 删除按钮 -->
                         <el-button type="danger" icon="el-icon-delete" size="mini"
@@ -269,7 +270,7 @@ export default {
                 this.getUserList()
             })
         },
-        //展示编辑用户对话框
+        //展示编辑用户对话框并查询用户信息
         async showEditDiglog(id) {
             const { data: res } = await this.$http.get('users/' + id)
             if (res.meta.status !== 200) {
